@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useActionState } from "react"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { useEffect } from "react"
+import { loginAction } from "./actions"
 import { Lock, Mail, Loader2, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,29 +11,14 @@ import { Label } from "@/components/ui/label"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ email: "", password: "" })
+  const [state, action, pending] = useActionState(loginAction, null)
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-
-    const result = await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    })
-
-    if (result?.error) {
-      setError("Credenciales inválidas")
-      setLoading(false)
-    } else {
+  useEffect(() => {
+    if (state && !state.error) {
       router.push("/panel")
       router.refresh()
     }
-  }
+  }, [state, router])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
@@ -45,10 +31,10 @@ export default function LoginPage() {
           <p className="mt-1 text-secondary">Accede a tus proyectos y avances de obra</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="rounded-xl border bg-white p-8 shadow-sm">
-          {error && (
+        <form action={action} className="rounded-xl border bg-white p-8 shadow-sm">
+          {state?.error && (
             <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 text-center">
-              {error}
+              {state.error}
             </div>
           )}
 
@@ -59,12 +45,12 @@ export default function LoginPage() {
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary-400" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   required
                   className="pl-10"
                   placeholder="correo@ejemplo.com"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  defaultValue="admin@amsestudio.com"
                 />
               </div>
             </div>
@@ -74,19 +60,19 @@ export default function LoginPage() {
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary-400" />
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   required
                   className="pl-10"
                   placeholder="••••••••"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  defaultValue="admin123"
                 />
               </div>
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="mt-6 w-full" disabled={loading}>
-            {loading ? (
+          <Button type="submit" size="lg" className="mt-6 w-full" disabled={pending}>
+            {pending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Iniciando sesión...
