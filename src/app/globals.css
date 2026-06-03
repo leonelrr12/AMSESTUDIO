@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #1F3A5F;
+  --color-primary-50: #eef2f7;
+  --color-primary-100: #d1dbe9;
+  --color-primary-200: #a3b7d3;
+  --color-primary-300: #7593bd;
+  --color-primary-400: #476fa7;
+  --color-primary-500: #1F3A5F;
+  --color-primary-600: #192e4c;
+  --color-primary-700: #132339;
+  --color-primary-800: #0c1726;
+  --color-primary-900: #060c13;
+
+  --color-secondary: #6B7280;
+  --color-secondary-50: #f0f1f3;
+  --color-secondary-100: #d9dbe0;
+  --color-secondary-200: #b3b7c0;
+  --color-secondary-300: #8d93a0;
+  --color-secondary-400: #6B7280;
+  --color-secondary-500: #4b515c;
+  --color-secondary-600: #3b4049;
+  --color-secondary-700: #2b2f36;
+  --color-secondary-800: #1c1e23;
+  --color-secondary-900: #0c0d10;
+
+  --color-accent: #F97316;
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #F97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+  --color-border: #e5e7eb;
+  --color-ring: #1F3A5F;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
