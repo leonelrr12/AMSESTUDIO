@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProjectType {
+  VIVIENDA
+  URBANIZACION
+  INFRAESTRUCTURA
+}
+
+enum ProjectStatus {
+  COMPLETADO
+  EN_PROCESO
+  PLANIFICADO
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String
+  type          ProjectType
+  area          Int?
+  executionTime String?
+  status        ProjectStatus @default(COMPLETADO)
+  featured      Boolean       @default(false)
+  images        String[]
+  videoUrl      String?
+  clientName    String?
+  location      String?
+  year          Int?
+  projectOrder  Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
