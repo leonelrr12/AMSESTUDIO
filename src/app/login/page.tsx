@@ -1,24 +1,54 @@
 "use client"
 
-import { useActionState } from "react"
+import { useState, useEffect, type FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { loginAction } from "./actions"
 import { Lock, Mail, Loader2, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { signIn } from "next-auth/react"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [state, action, pending] = useActionState(loginAction, null)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({ email: "admin@amsestudio.com", password: "admin123" })
 
-  useEffect(() => {
-    if (state && !state.error) {
-      router.push("/panel")
-      router.refresh()
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+
+    try {
+      const result = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        if (result.error === "CredentialsSignin" || result.status === 401) {
+          setError("Credenciales inválidas. Verifica tu email y contraseña.")
+        } else if (result.error === "MissingCSRF") {
+          setError("Error de seguridad. Recarga la página e intenta de nuevo.")
+        } else {
+          setError(`Error: ${result.error}`)
+        }
+        setLoading(false)
+      } else if (result?.ok) {
+        router.push("/panel")
+        router.refresh()
+      } else if (result?.url) {
+        window.location.href = result.url
+      } else {
+        window.location.href = "/panel"
+      }
+    } catch (e: any) {
+      setError("Error de conexión. Intenta de nuevo.")
+      console.error("Login error:", e)
+      setLoading(false)
     }
-  }, [state, router])
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted p-4">
@@ -31,10 +61,10 @@ export default function LoginPage() {
           <p className="mt-1 text-secondary">Accede a tus proyectos y avances de obra</p>
         </div>
 
-        <form action={action} className="rounded-xl border bg-white p-8 shadow-sm">
-          {state?.error && (
+        <form onSubmit={handleSubmit} className="rounded-xl border bg-white p-8 shadow-sm">
+          {error && (
             <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 text-center">
-              {state.error}
+              {error}
             </div>
           )}
 
@@ -45,12 +75,12 @@ export default function LoginPage() {
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary-400" />
                 <Input
                   id="email"
-                  name="email"
                   type="email"
                   required
                   className="pl-10"
                   placeholder="correo@ejemplo.com"
-                  defaultValue="admin@amsestudio.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
             </div>
@@ -60,19 +90,19 @@ export default function LoginPage() {
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary-400" />
                 <Input
                   id="password"
-                  name="password"
                   type="password"
                   required
                   className="pl-10"
                   placeholder="••••••••"
-                  defaultValue="admin123"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
               </div>
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="mt-6 w-full" disabled={pending}>
-            {pending ? (
+          <Button type="submit" size="lg" className="mt-6 w-full" disabled={loading}>
+            {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Iniciando sesión...
