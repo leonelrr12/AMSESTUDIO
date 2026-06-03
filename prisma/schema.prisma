@@ -38,3 +38,24 @@ model Project {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
+
+enum FinishLevel {
+  BASICO
+  ESTANDAR
+  PREMIUM
+}
+
+model Estimate {
+  id             String      @id @default(cuid())
+  squareMeters   Int
+  projectType    String
+  finishLevel    FinishLevel @default(ESTANDAR)
+  extras         String[]
+  estimatedCost  Int
+  estimatedTime  String
+  name           String?
+  phone          String?
+  email          String?
+  message        String?
+  createdAt      DateTime    @default(now())
+}
