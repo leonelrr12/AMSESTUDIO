@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { WhatsAppButton } from "@/components/layout/whatsapp-button"
+import { ChatBot } from "@/components/layout/chatbot"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -55,6 +56,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ChatBot />
         <WhatsAppButton />
       </body>
     </html>
