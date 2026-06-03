@@ -14,11 +14,11 @@ export async function loginAction(formData: FormData) {
       redirect: false,
     })
   } catch (e: any) {
-    if (e?.type === "CredentialsSignin" || e?.code === "credentials" || e?.message?.includes("credentials")) {
-      redirect("/login?error=CredentialsSignin")
-    }
-    console.error("Login error:", e?.message || e)
-    redirect("/login?error=Unknown")
+    const isInvalid =
+      e?.type === "CredentialsSignin" ||
+      e?.code === "credentials" ||
+      e?.message?.toLowerCase?.()?.includes?.("credential")
+    redirect(isInvalid ? "/login?error=CredentialsSignin" : "/login?error=Unknown")
   }
 
   redirect("/panel")

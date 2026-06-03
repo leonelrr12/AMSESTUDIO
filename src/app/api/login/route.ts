@@ -15,11 +15,22 @@ export async function POST(req: NextRequest) {
   const baseUrl = getBaseUrl(req)
 
   try {
-    await signIn("credentials", {
+    const result: any = await signIn("credentials", {
       email,
       password,
       redirect: false,
     })
+
+    const redirectUrl = new URL("/panel", baseUrl)
+    const response = NextResponse.redirect(redirectUrl, 303)
+
+    if (result?.cookies) {
+      for (const cookie of result.cookies) {
+        response.headers.append("Set-Cookie", cookie)
+      }
+    }
+
+    return response
   } catch (e: any) {
     const isInvalid =
       e?.type === "CredentialsSignin" ||
@@ -27,8 +38,7 @@ export async function POST(req: NextRequest) {
       e?.message?.toLowerCase?.()?.includes?.("credential")
     return NextResponse.redirect(
       new URL(isInvalid ? "/login?error=CredentialsSignin" : "/login?error=Unknown", baseUrl),
+      303,
     )
   }
-
-  return NextResponse.redirect(new URL("/panel", baseUrl))
 }
