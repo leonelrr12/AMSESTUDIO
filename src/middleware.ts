@@ -11,6 +11,8 @@ export default async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
+    secureCookie: true,
+    cookieName: "__Secure-authjs.session-token",
   })
 
   if (isProtected && !token) {
