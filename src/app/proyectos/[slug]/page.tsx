@@ -22,12 +22,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     INFRAESTRUCTURA: "Infraestructura",
   }
 
+  const baseUrl = "https://amsestudio.com"
+
   return {
     title: project.title,
     description: project.description.slice(0, 160),
+    alternates: {
+      canonical: `${baseUrl}/proyectos/${slug}`,
+    },
     openGraph: {
       title: project.title,
       description: project.description.slice(0, 160),
+      url: `${baseUrl}/proyectos/${slug}`,
       type: "article",
       images: project.images[0] ? [{ url: project.images[0] }] : [],
     },

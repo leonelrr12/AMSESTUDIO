@@ -16,12 +16,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!post) return {}
 
+  const baseUrl = "https://amsestudio.com"
+
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `${baseUrl}/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: `${baseUrl}/blog/${slug}`,
       type: "article",
       publishedTime: post.createdAt.toISOString(),
       modifiedTime: post.updatedAt.toISOString(),

@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    canonical: baseUrl,
+  },
   openGraph: {
     title: "AmsEstudio | Arquitectura y Construcción en Panamá",
     description:
