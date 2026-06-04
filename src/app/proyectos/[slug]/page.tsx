@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -7,6 +8,36 @@ import { Button } from "@/components/ui/button"
 
 async function getProject(slug: string) {
   return prisma.project.findUnique({ where: { slug } })
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const project = await getProject(slug)
+
+  if (!project) return {}
+
+  const typeLabels: Record<string, string> = {
+    VIVIENDA: "Vivienda",
+    URBANIZACION: "Urbanización",
+    INFRAESTRUCTURA: "Infraestructura",
+  }
+
+  return {
+    title: project.title,
+    description: project.description.slice(0, 160),
+    openGraph: {
+      title: project.title,
+      description: project.description.slice(0, 160),
+      type: "article",
+      images: project.images[0] ? [{ url: project.images[0] }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.description.slice(0, 160),
+      images: project.images[0] ? [project.images[0]] : [],
+    },
+  }
 }
 
 export default async function ProyectoPage({ params }: { params: Promise<{ slug: string }> }) {

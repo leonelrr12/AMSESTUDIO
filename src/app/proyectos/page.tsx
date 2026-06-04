@@ -1,7 +1,19 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import { Building2, Home, Road } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Proyectos",
+  description:
+    "Conoce los proyectos que hemos desarrollado en Panamá. Viviendas, urbanizaciones e infraestructura que reflejan nuestro compromiso con la calidad.",
+  openGraph: {
+    title: "Proyectos | AmsEstudio",
+    description:
+      "Viviendas, urbanizaciones e infraestructura diseñadas y construidas por AmsEstudio en Panamá.",
+  },
+}
 
 const typeIcons = {
   VIVIENDA: Home,

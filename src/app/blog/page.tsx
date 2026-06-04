@@ -1,7 +1,19 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import { Calendar, Clock, ArrowRight } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Consejos, guías y tendencias sobre construcción, arquitectura y diseño en Panamá, escritos por el equipo de AmsEstudio.",
+  openGraph: {
+    title: "Blog | AmsEstudio",
+    description:
+      "Consejos, guías y tendencias sobre construcción, arquitectura y diseño en Panamá.",
+  },
+}
 
 async function getPosts() {
   return prisma.post.findMany({
