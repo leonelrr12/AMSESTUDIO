@@ -4,7 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X, Building2, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -23,7 +22,8 @@ export function Header() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <>
+    <header className="sticky top-0 z-50 w-full border-b bg-white md:bg-white/95 md:backdrop-blur md:supports-[backdrop-filter]:bg-white/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
           <Building2 className="h-6 w-6 text-accent" />
@@ -61,32 +61,32 @@ export function Header() {
         </button>
       </div>
 
-      <div className={cn(
-        "fixed inset-0 top-16 z-40 bg-white md:hidden transition-all duration-300",
-        open ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-      )}>
-        <nav className="flex flex-col p-6 gap-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="text-lg font-medium py-2 text-secondary-600 hover:text-primary border-b border-secondary-100"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="pt-4 space-y-3">
-            <Button variant="primary" className="w-full" asChild>
-              <a href="/#contacto">Solicitar Cotización</a>
-            </Button>
-            <a href={`tel:${PHONE}`} className="flex items-center justify-center gap-2 text-sm font-medium text-primary py-2">
-              <Phone className="h-4 w-4" />
-              {PHONE_DISPLAY}
-            </a>
-          </div>
-        </nav>
-      </div>
     </header>
+      {open && (
+        <div className="fixed inset-0 top-16 z-50 bg-background md:hidden" style={{ backgroundColor: '#ffffff' }}>
+          <nav className="flex flex-col p-6 gap-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="text-lg font-medium py-2 text-secondary-600 hover:text-primary border-b border-secondary-100"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="pt-4 space-y-3">
+              <Button variant="primary" className="w-full" asChild>
+                <a href="/#contacto">Solicitar Cotización</a>
+              </Button>
+              <a href={`tel:${PHONE}`} className="flex items-center justify-center gap-2 text-sm font-medium text-primary py-2">
+                <Phone className="h-4 w-4" />
+                {PHONE_DISPLAY}
+              </a>
+            </div>
+          </nav>
+        </div>
+      )}
+    </>
   )
 }
